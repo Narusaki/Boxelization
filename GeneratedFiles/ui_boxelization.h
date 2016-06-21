@@ -15,6 +15,7 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
@@ -25,28 +26,38 @@ QT_BEGIN_NAMESPACE
 class Ui_BoxelizationClass
 {
 public:
-    QMenuBar *menuBar;
-    QToolBar *mainToolBar;
+    QAction *actionImport;
     QWidget *centralWidget;
+    QMenuBar *menuBar;
+    QMenu *menuFile;
+    QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *BoxelizationClass)
     {
         if (BoxelizationClass->objectName().isEmpty())
             BoxelizationClass->setObjectName(QStringLiteral("BoxelizationClass"));
-        BoxelizationClass->resize(600, 400);
-        menuBar = new QMenuBar(BoxelizationClass);
-        menuBar->setObjectName(QStringLiteral("menuBar"));
-        BoxelizationClass->setMenuBar(menuBar);
-        mainToolBar = new QToolBar(BoxelizationClass);
-        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
-        BoxelizationClass->addToolBar(mainToolBar);
+        BoxelizationClass->resize(1366, 768);
+        actionImport = new QAction(BoxelizationClass);
+        actionImport->setObjectName(QStringLiteral("actionImport"));
         centralWidget = new QWidget(BoxelizationClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         BoxelizationClass->setCentralWidget(centralWidget);
+        menuBar = new QMenuBar(BoxelizationClass);
+        menuBar->setObjectName(QStringLiteral("menuBar"));
+        menuBar->setGeometry(QRect(0, 0, 1366, 23));
+        menuFile = new QMenu(menuBar);
+        menuFile->setObjectName(QStringLiteral("menuFile"));
+        BoxelizationClass->setMenuBar(menuBar);
+        mainToolBar = new QToolBar(BoxelizationClass);
+        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
+        BoxelizationClass->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(BoxelizationClass);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         BoxelizationClass->setStatusBar(statusBar);
+
+        menuBar->addAction(menuFile->menuAction());
+        menuFile->addAction(actionImport);
 
         retranslateUi(BoxelizationClass);
 
@@ -56,6 +67,8 @@ public:
     void retranslateUi(QMainWindow *BoxelizationClass)
     {
         BoxelizationClass->setWindowTitle(QApplication::translate("BoxelizationClass", "Boxelization", 0));
+        actionImport->setText(QApplication::translate("BoxelizationClass", "Import", 0));
+        menuFile->setTitle(QApplication::translate("BoxelizationClass", "File", 0));
     } // retranslateUi
 
 };

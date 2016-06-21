@@ -3,6 +3,8 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_boxelization.h"
+#include "ui_optionwidget.h"
+#include "openglwidget.h"
 
 class Boxelization : public QMainWindow
 {
@@ -14,6 +16,10 @@ public:
 
 private:
 	Ui::BoxelizationClass ui;
+
+	OpenGLWidget *glWidget;
+	Ui::OptionWidget *optionWidgetUI;
+	QDockWidget *optionWidget;
 };
 
 #endif // BOXELIZATION_H
