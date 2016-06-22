@@ -20,4 +20,6 @@ Boxelization::Boxelization(QWidget *parent)
 Boxelization::~Boxelization()
 {
 	delete glWidget;
+	delete optionWidget;
+	delete optionWidgetUI;
 }
