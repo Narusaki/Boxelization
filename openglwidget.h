@@ -2,6 +2,8 @@
 #define OPENGLWIDGET_H
 
 #include <QtOpenGL/QGLWidget>
+#include <QtGui/QMouseEvent>
+#include "trackball.h"
 
 class OpenGLWidget : public QGLWidget
 {
@@ -24,5 +26,8 @@ protected:
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dragMoveEvent(QDragMoveEvent *event);
 	void dropEvent(QDropEvent *event);
+
+private:
+	TrackBall *trackball;
 };
 #endif
