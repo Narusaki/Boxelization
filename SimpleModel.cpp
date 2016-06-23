@@ -11,6 +11,12 @@ SimpleModel::SimpleModel()
 
 }
 
+SimpleModel::SimpleModel(const SimpleModel& m)
+{
+	verts = m.verts;
+	faces = m.faces;
+}
+
 SimpleModel::~SimpleModel()
 {
 
@@ -23,6 +29,7 @@ bool SimpleModel::LoadMesh(string fileName)
 	if (fileName.substr(fileName.rfind("."), 4) == ".off" || fileName.substr(fileName.rfind("."), 4) == ".OFF")
 		return LoadOFF(fileName);
 	else return false;
+	return true;
 }
 
 bool SimpleModel::LoadOBJ(string fileName)
@@ -49,6 +56,7 @@ bool SimpleModel::LoadOBJ(string fileName)
 			faces.push_back(v0-1); faces.push_back(v1-1); faces.push_back(v2-1);
 		}
 	}
+	return true;
 }
 bool SimpleModel::LoadOFF(string fileName)
 {
@@ -78,6 +86,7 @@ bool SimpleModel::LoadOFF(string fileName)
 		sin << curLine;
 		sin >> polyType >> faces[i * 3] >> faces[i * 3 + 1] >> faces[i * 3 + 2];
 	}
+	return true;
 }
 
 void SimpleModel::Normalize()

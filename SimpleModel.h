@@ -9,6 +9,7 @@ class SimpleModel
 {
 public:
 	SimpleModel();
+	SimpleModel(const SimpleModel& m);
 	~SimpleModel();
 
 	bool LoadMesh(std::string fileName);
@@ -20,7 +21,7 @@ private:
 	bool LoadOBJ(std::string fileName);
 	bool LoadOFF(std::string fileName);
 
-private:
+public:
 	std::vector< Vector3D > verts;
 	std::vector< int > faces;
 };

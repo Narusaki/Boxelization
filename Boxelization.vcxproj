@@ -103,6 +103,7 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="openglwidget.cpp" />
+    <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="SimpleModel.cpp" />
     <ClCompile Include="trackball.cpp" />
   </ItemGroup>
@@ -133,6 +134,7 @@
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_boxelization.h" />
     <ClInclude Include="GeneratedFiles\ui_optionwidget.h" />
+    <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="SimpleModel.h" />
     <ClInclude Include="trackball.h" />
     <CustomBuild Include="openglwidget.h">

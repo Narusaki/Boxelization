@@ -6,15 +6,14 @@ OpenGLWidget::OpenGLWidget(QWidget *parent) : QGLWidget(parent)
 	trackball = new TrackBall();
 	trackball->init();
 
-	modelTest = new SimpleModel();
-	modelTest->LoadMesh("nefertiti.off");
-	modelTest->Normalize();
+	sceneGraph = new SimpleSceneGraph();
+	sceneGraph->LoadModel("H:\\Graphics\\Boxelization\\out");
 }
 
 OpenGLWidget::~OpenGLWidget()
 {
 	delete trackball;
-	delete modelTest;
+	delete sceneGraph;
 }
 
 
@@ -52,7 +51,7 @@ void OpenGLWidget::paintGL()
 // 	glVertex3d(0.0, 0.5, 0.0);
 // 	glEnd();
 
-	modelTest->Render();
+	sceneGraph->Render();
 }
 
 void OpenGLWidget::resizeGL(int width, int height)
