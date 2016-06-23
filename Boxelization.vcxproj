@@ -103,6 +103,7 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="openglwidget.cpp" />
+    <ClCompile Include="SimpleModel.cpp" />
     <ClCompile Include="trackball.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +133,7 @@
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_boxelization.h" />
     <ClInclude Include="GeneratedFiles\ui_optionwidget.h" />
+    <ClInclude Include="SimpleModel.h" />
     <ClInclude Include="trackball.h" />
     <CustomBuild Include="openglwidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

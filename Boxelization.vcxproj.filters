@@ -62,6 +62,9 @@
     <ClCompile Include="trackball.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SimpleModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="boxelization.h">
@@ -88,6 +91,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="trackball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

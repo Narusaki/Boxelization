@@ -5,11 +5,16 @@ OpenGLWidget::OpenGLWidget(QWidget *parent) : QGLWidget(parent)
 {
 	trackball = new TrackBall();
 	trackball->init();
+
+	modelTest = new SimpleModel();
+	modelTest->LoadMesh("nefertiti.off");
+	modelTest->Normalize();
 }
 
 OpenGLWidget::~OpenGLWidget()
 {
 	delete trackball;
+	delete modelTest;
 }
 
 
@@ -41,11 +46,13 @@ void OpenGLWidget::paintGL()
 
 	trackball->apply();
 	glColor3f(1.0, 0.0, 1.0);
-	glBegin(GL_TRIANGLES);
-	glVertex3d(-0.5, -0.5, 0.0);
-	glVertex3d(0.5, -0.5, 0.0);
-	glVertex3d(0.0, 0.5, 0.0);
-	glEnd();
+// 	glBegin(GL_TRIANGLES);
+// 	glVertex3d(-0.5, -0.5, 0.0);
+// 	glVertex3d(0.5, -0.5, 0.0);
+// 	glVertex3d(0.0, 0.5, 0.0);
+// 	glEnd();
+
+	modelTest->Render();
 }
 
 void OpenGLWidget::resizeGL(int width, int height)

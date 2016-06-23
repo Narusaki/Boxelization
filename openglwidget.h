@@ -4,6 +4,7 @@
 #include <QtOpenGL/QGLWidget>
 #include <QtGui/QMouseEvent>
 #include "trackball.h"
+#include "SimpleModel.h"
 
 class OpenGLWidget : public QGLWidget
 {
@@ -29,5 +30,7 @@ protected:
 
 private:
 	TrackBall *trackball;
+	// test model
+	SimpleModel *modelTest;
 };
 #endif
