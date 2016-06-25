@@ -106,26 +106,26 @@ void SimpleModel::CalcNormals()
 	}
 }
 
-void SimpleModel::Normalize()
-{
-	Vector3D vMin(DBL_MAX, DBL_MAX, DBL_MAX), vMax(-DBL_MAX, -DBL_MAX, -DBL_MAX);
-	Vector3D center;
-	for (auto &p : verts)
-	{
-		center += p;
-		for (int i = 0; i < 3; ++i) vMin[i] = __min(vMin[i], p[i]);
-		for (int i = 0; i < 3; ++i) vMax[i] = __max(vMax[i], p[i]);
-	}
-	center /= verts.size();
-	double scale = 1.0 / ((vMin - vMax).length() / 2.0);
-	Normalize(center, scale);
-}
-
-void SimpleModel::Normalize(Vector3D center, double scale)
-{
-	for (auto &p : verts)
-		p = (p - center) * scale;
-}
+// void SimpleModel::Normalize()
+// {
+// 	Vector3D vMin(DBL_MAX, DBL_MAX, DBL_MAX), vMax(-DBL_MAX, -DBL_MAX, -DBL_MAX);
+// 	Vector3D center;
+// 	for (auto &p : verts)
+// 	{
+// 		center += p;
+// 		for (int i = 0; i < 3; ++i) vMin[i] = __min(vMin[i], p[i]);
+// 		for (int i = 0; i < 3; ++i) vMax[i] = __max(vMax[i], p[i]);
+// 	}
+// 	center /= verts.size();
+// 	double scale = 1.0 / ((vMin - vMax).length() / 2.0);
+// 	Normalize(center, scale);
+// }
+// 
+// void SimpleModel::Normalize(Vector3D center, double scale)
+// {
+// 	for (auto &p : verts)
+// 		p = (p - center) * scale;
+// }
 
 void SimpleModel::Render()
 {

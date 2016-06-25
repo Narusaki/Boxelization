@@ -31,6 +31,7 @@ void OpenGLWidget::initializeGL()
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_NORMALIZE);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
@@ -59,7 +60,7 @@ void OpenGLWidget::paintGL()
 	gluDeleteQuadric(sphere);
 
 	trackball->apply();
-	glColor3f(1.0, 0.0, 1.0);
+	glColor3f(0.7, 0.7, 0.7);
 // 	glBegin(GL_TRIANGLES);
 // 	glVertex3d(-0.5, -0.5, 0.0);
 // 	glVertex3d(0.5, -0.5, 0.0);

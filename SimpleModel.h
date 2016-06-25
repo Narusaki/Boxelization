@@ -13,8 +13,8 @@ public:
 	~SimpleModel();
 
 	bool LoadMesh(std::string fileName);
-	void Normalize();
-	void Normalize(Vector3D center, double scale);
+// 	void Normalize();
+// 	void Normalize(Vector3D center, double scale);
 	void Render();
 	
 private:

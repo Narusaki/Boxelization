@@ -15,7 +15,7 @@ class SGNode
 {
 public:
 	SGNode() { 
-		for (int i = 0; i < 16; ++i) mvMatrix[i] = i % 4 == 0 ? 1 : 0;
+		for (int i = 0; i < 16; ++i) mvMatrix[i] = i % 5 == 0 ? 1 : 0;
 	}
 	SGNode(std::string fileName) : SGNode() { 
 		m.LoadMesh(fileName);
@@ -47,12 +47,12 @@ public:
 	bool LoadModel(std::string modelsDirectory);
 	bool LoadPath(std::string pathFile);
 
-	void Normalize();
 	void Render();
 
 private:
 	std::vector< SGNode > nodes;
 	std::vector< std::list< int > > sceneGraph;
 	std::list< int >::iterator root;
+	double mvMatrix[16];
 };
 #endif
