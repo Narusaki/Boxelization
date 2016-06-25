@@ -22,6 +22,21 @@ void OpenGLWidget::initializeGL()
 	glClearColor(1.0, 1.0, 1.0, 1.0);
 	glClearDepth(1.0);
 	glEnable(GL_DEPTH_TEST);
+
+	// set lighting
+
+	GLfloat ambientLight[4] = { 0.1, 0.1, 0.1, 0.1 };
+	GLfloat diffuseLight[4] = { 0.7, 0.7, 0.7, 0.7 };
+	GLfloat lightPosition[4] = { 0.0, 0.0, 6.0, 0.0 };
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_COLOR_MATERIAL);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 }
 
 void OpenGLWidget::paintGL()
@@ -62,7 +77,7 @@ void OpenGLWidget::resizeGL(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-1.0, 1.0, -(double)height / (double)width, (double)height / (double)width, 1000.0, -1000.0);
+	glOrtho(-1.0, 1.0, -(double)height / (double)width, (double)height / (double)width, -1000.0, 1000.0);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

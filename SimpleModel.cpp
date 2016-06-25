@@ -24,11 +24,16 @@ SimpleModel::~SimpleModel()
 
 bool SimpleModel::LoadMesh(string fileName)
 {
+	bool loadSuccess;
 	if (fileName.substr(fileName.rfind("."), 4) == ".obj" || fileName.substr(fileName.rfind("."), 4) == ".OBJ")
-		return LoadOBJ(fileName);
+		loadSuccess = LoadOBJ(fileName);
 	if (fileName.substr(fileName.rfind("."), 4) == ".off" || fileName.substr(fileName.rfind("."), 4) == ".OFF")
-		return LoadOFF(fileName);
+		loadSuccess = LoadOFF(fileName);
 	else return false;
+	if (!loadSuccess) return false;
+
+	CalcNormals();
+
 	return true;
 }
 
@@ -89,6 +94,18 @@ bool SimpleModel::LoadOFF(string fileName)
 	return true;
 }
 
+void SimpleModel::CalcNormals()
+{
+	normals.resize(faces.size() / 3);
+	for (int i = 0; i < faces.size(); i += 3)
+	{
+		Vector3D v[3];
+		for (int j = 0; j < 3; ++j) v[j] = verts[faces[i + j]];
+		Vector3D vec0 = v[1] - v[0], vec1 = v[2] - v[0];
+		normals[i / 3] = vec0 ^ vec1; normals[i / 3].normalize();
+	}
+}
+
 void SimpleModel::Normalize()
 {
 	Vector3D vMin(DBL_MAX, DBL_MAX, DBL_MAX), vMax(-DBL_MAX, -DBL_MAX, -DBL_MAX);
@@ -115,6 +132,7 @@ void SimpleModel::Render()
 	glBegin(GL_TRIANGLES);
 	for (int i = 0; i < faces.size(); i += 3)
 	{
+		glNormal3d(normals[i / 3].x, normals[i / 3].y, normals[i / 3].z);
 		for (int j = 0; j < 3; ++j)
 			glVertex3d(verts[faces[i + j]].x, verts[faces[i + j]].y, verts[faces[i + j]].z);
 	}

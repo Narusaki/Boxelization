@@ -20,9 +20,11 @@ public:
 private:
 	bool LoadOBJ(std::string fileName);
 	bool LoadOFF(std::string fileName);
+	void CalcNormals();
 
 public:
 	std::vector< Vector3D > verts;
 	std::vector< int > faces;
+	std::vector< Vector3D > normals;
 };
 #endif
