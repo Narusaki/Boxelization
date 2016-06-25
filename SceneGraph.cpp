@@ -37,6 +37,7 @@ bool SimpleSceneGraph::LoadModel(std::string modelsDirectory)
 		return false;
 	}
 
+	isDFSVisited.resize(nodes.size(), false);
 	// normalize
 	Vector3D center; int totalVertNum = 0;
 	Vector3D vMin(DBL_MAX, DBL_MAX, DBL_MAX), vMax(-DBL_MAX, -DBL_MAX, -DBL_MAX);
@@ -61,6 +62,20 @@ bool SimpleSceneGraph::LoadModel(std::string modelsDirectory)
 
 bool SimpleSceneGraph::LoadPath(std::string pathFile)
 {
+	// TODO: Load the path information. 
+	// Build the adjacent list according to the path. Set root.
+	
+	// currently a fully-linked graph is built.
+	sceneGraph.resize(nodes.size());
+	for (int i = 0; i < sceneGraph.size(); ++i)
+	{
+		for (int j = 0; j < nodes.size(); ++j)
+		{
+			if (j == i) continue;
+			sceneGraph[i].push_back(j);
+		}
+	}
+	rootId = 0;
 	return true;
 }
 
@@ -69,9 +84,25 @@ void SimpleSceneGraph::Render()
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glMultMatrixd(mvMatrix);
-	for (auto &node : nodes)
+	// DFS to render the scene
+	isDFSVisited.assign(isDFSVisited.size(), false);
+	RenderNode(rootId);
+	glPopMatrix();
+}
+
+void SimpleSceneGraph::RenderNode(int nodeId)
+{
+	isDFSVisited[nodeId] = true;
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glMultMatrixd(nodes[nodeId].mvMatrix);
+	nodes[nodeId].m.Render();
+	// recursively render 
+	for (auto adjNodeIter = sceneGraph[nodeId].begin(); 
+		adjNodeIter != sceneGraph[nodeId].end(); ++adjNodeIter)
 	{
-		node.Render();
+		if (isDFSVisited[*adjNodeIter]) continue;
+		RenderNode(*adjNodeIter);
 	}
 	glPopMatrix();
 }

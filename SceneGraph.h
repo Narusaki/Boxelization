@@ -27,11 +27,6 @@ public:
 	}
 	~SGNode() { }
 
-	void Render()
-	{
-		m.Render();
-	}
-
 public:
 	SimpleModel m;			// model
 	Vector3D center;		// pivot center
@@ -50,9 +45,13 @@ public:
 	void Render();
 
 private:
+	void RenderNode(int nodeId);
+
+private:
 	std::vector< SGNode > nodes;
 	std::vector< std::list< int > > sceneGraph;
-	std::list< int >::iterator root;
+	std::vector< bool > isDFSVisited;
+	int rootId;
 	double mvMatrix[16];
 };
 #endif

@@ -8,6 +8,7 @@ OpenGLWidget::OpenGLWidget(QWidget *parent) : QGLWidget(parent)
 
 	sceneGraph = new SimpleSceneGraph();
 	sceneGraph->LoadModel("H:\\Graphics\\Boxelization\\out");
+	sceneGraph->LoadPath("");
 }
 
 OpenGLWidget::~OpenGLWidget()
