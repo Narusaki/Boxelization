@@ -19,6 +19,7 @@ OpenGLWidget::~OpenGLWidget()
 
 void OpenGLWidget::timeUp()
 {
+	sceneGraph->UpdateRotateState();
 	update();
 }
 

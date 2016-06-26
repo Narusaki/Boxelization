@@ -46,6 +46,9 @@ public:
 	void SetRotateSpeed(double rotateSpeed_) {
 		rotateSpeed = rotateSpeed_;
 	};
+	void UpdateRotateState() {
+		rotateAngle += rotateSpeed;
+	}
 
 
 private:
@@ -59,5 +62,6 @@ private:
 	double mvMatrix[16];
 
 	double rotateSpeed = 0.0;
+	double rotateAngle = 0.0;
 };
 #endif

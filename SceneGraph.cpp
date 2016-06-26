@@ -99,8 +99,7 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 	// TESTING MODIFICATION OF LOCAL MVMATRIX
 	glPushMatrix();
 	glLoadIdentity();
-	glRotated(rotateSpeed, 1.0, 0.0, 0.0);
-	glMultMatrixd(nodes[nodeId].mvMatrix);;
+	glRotated(rotateAngle, 1.0, 0.0, 0.0);
 	glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
 	glPopMatrix();
 
