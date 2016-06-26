@@ -7,7 +7,7 @@ OpenGLWidget::OpenGLWidget(QWidget *parent) : QGLWidget(parent)
 	trackball->init();
 
 	sceneGraph = new SimpleSceneGraph();
-	sceneGraph->LoadModel("H:\\Graphics\\Boxelization\\out");
+	sceneGraph->LoadModel(".\\out");
 	sceneGraph->LoadPath("");
 }
 
@@ -15,6 +15,12 @@ OpenGLWidget::~OpenGLWidget()
 {
 	delete trackball;
 	delete sceneGraph;
+}
+
+void OpenGLWidget::timeUp()
+{
+	xRotate += 0.1;
+	update();
 }
 
 
@@ -68,6 +74,7 @@ void OpenGLWidget::paintGL()
 // 	glVertex3d(0.0, 0.5, 0.0);
 // 	glEnd();
 
+	glRotatef(xRotate, 1.0, 0.0, 0.0);
 	sceneGraph->Render();
 }
 

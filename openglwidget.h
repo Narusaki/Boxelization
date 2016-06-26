@@ -15,6 +15,9 @@ public:
 	OpenGLWidget(QWidget *parent = 0);
 	~OpenGLWidget();
 
+public slots:
+	void timeUp();
+
 protected:
 	void initializeGL();
 	void paintGL();
@@ -32,5 +35,7 @@ protected:
 private:
 	TrackBall *trackball;
 	SimpleSceneGraph *sceneGraph;
+
+	double xRotate = 0.0;
 };
 #endif

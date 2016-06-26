@@ -15,6 +15,9 @@ Boxelization::Boxelization(QWidget *parent)
 	optionWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
 	addDockWidget(Qt::LeftDockWidgetArea, optionWidget);
 	
+	timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), glWidget, SLOT(timeUp()));
+	timer->start(10);
 }
 
 Boxelization::~Boxelization()
@@ -22,4 +25,6 @@ Boxelization::~Boxelization()
 	delete glWidget;
 	delete optionWidget;
 	delete optionWidgetUI;
+
+	delete timer;
 }
