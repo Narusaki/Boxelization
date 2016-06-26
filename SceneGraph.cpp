@@ -97,11 +97,15 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 	glPushMatrix();
 
 	// TESTING MODIFICATION OF LOCAL MVMATRIX
+	// TODO: if nodeId == rotateNodeId && parentNodeId == centerNodeId
+	// TODO: update current node's mvMatrix here
 	glPushMatrix();
 	glLoadIdentity();
 	glRotated(rotateAngle, 1.0, 0.0, 0.0);
 	glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
 	glPopMatrix();
+	// TODO: otherwise, if nodeId == centerNodeId && parentNodeId == rotateNodeId
+	// TODO: "reverse" the rotating matrix and update current node's mvMatrix here
 
 	glMultMatrixd(nodes[nodeId].mvMatrix);
 	nodes[nodeId].m.Render();

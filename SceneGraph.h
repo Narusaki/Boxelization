@@ -36,6 +36,11 @@ public:
 class SimpleSceneGraph
 {
 public:
+
+	struct PathInfo
+	{
+		int nodeId;
+	};
 	SimpleSceneGraph();
 	~SimpleSceneGraph();
 
@@ -47,6 +52,9 @@ public:
 		rotateSpeed = rotateSpeed_;
 	};
 	void UpdateRotateState() {
+		// TODO: check if the rotate upper bound is met
+		// TODO: if it is, change centerNodeId and rotateNodeId according to pathInfo
+		// TODO: otherwise, simply update rotateAngle (just like following);
 		rotateAngle += rotateSpeed;
 	}
 
@@ -63,5 +71,10 @@ private:
 
 	double rotateSpeed = 0.0;
 	double rotateAngle = 0.0;
+
+	// path information
+	std::vector< PathInfo > pathInfo;						// loaded path information
+	int centerNodeId = -1, rotateNodeId = -1;				// current center and orbiting node
+	int rotateAngleUpperBound = 90.0;						// the maximum rotating angle upper bound
 };
 #endif
