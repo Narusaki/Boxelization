@@ -15,6 +15,9 @@ public:
 	Boxelization(QWidget *parent = 0);
 	~Boxelization();
 
+public slots:
+	void SetRotateSpeed(int periodTime);
+
 private:
 	Ui::BoxelizationClass ui;
 
@@ -23,6 +26,8 @@ private:
 	QDockWidget *optionWidget;
 
 	QTimer *timer;
+
+	int refreshTimeSlice = 10;
 };
 
 #endif // BOXELIZATION_H

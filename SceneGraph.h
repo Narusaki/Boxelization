@@ -41,8 +41,12 @@ public:
 
 	bool LoadModel(std::string modelsDirectory);
 	bool LoadPath(std::string pathFile);
-
 	void Render();
+	// set for the rotating angle in each refreshment
+	void SetRotateSpeed(double rotateSpeed_) {
+		rotateSpeed = rotateSpeed_;
+	};
+
 
 private:
 	void RenderNode(int nodeId);
@@ -53,5 +57,7 @@ private:
 	std::vector< bool > isDFSVisited;
 	int rootId;
 	double mvMatrix[16];
+
+	double rotateSpeed = 0.0;
 };
 #endif

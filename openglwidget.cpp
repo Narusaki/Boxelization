@@ -7,7 +7,7 @@ OpenGLWidget::OpenGLWidget(QWidget *parent) : QGLWidget(parent)
 	trackball->init();
 
 	sceneGraph = new SimpleSceneGraph();
-	sceneGraph->LoadModel(".\\out");
+	sceneGraph->LoadModel(".\\example");
 	sceneGraph->LoadPath("");
 }
 
@@ -19,10 +19,8 @@ OpenGLWidget::~OpenGLWidget()
 
 void OpenGLWidget::timeUp()
 {
-	xRotate += 0.1;
 	update();
 }
-
 
 void OpenGLWidget::initializeGL()
 {
@@ -73,8 +71,6 @@ void OpenGLWidget::paintGL()
 // 	glVertex3d(0.5, -0.5, 0.0);
 // 	glVertex3d(0.0, 0.5, 0.0);
 // 	glEnd();
-
-	glRotatef(xRotate, 1.0, 0.0, 0.0);
 	sceneGraph->Render();
 }
 

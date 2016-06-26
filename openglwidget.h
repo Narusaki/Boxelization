@@ -32,7 +32,7 @@ protected:
 	void dragMoveEvent(QDragMoveEvent *event);
 	void dropEvent(QDropEvent *event);
 
-private:
+public:
 	TrackBall *trackball;
 	SimpleSceneGraph *sceneGraph;
 

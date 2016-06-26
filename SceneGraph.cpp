@@ -95,6 +95,15 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 	isDFSVisited[nodeId] = true;
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
+
+	// TESTING MODIFICATION OF LOCAL MVMATRIX
+	glPushMatrix();
+	glLoadIdentity();
+	glRotated(rotateSpeed, 1.0, 0.0, 0.0);
+	glMultMatrixd(nodes[nodeId].mvMatrix);;
+	glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
+	glPopMatrix();
+
 	glMultMatrixd(nodes[nodeId].mvMatrix);
 	nodes[nodeId].m.Render();
 	// recursively render 
