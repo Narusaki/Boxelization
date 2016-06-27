@@ -124,13 +124,13 @@ void TrackBall::mouseMove(int button, Vector2D v2d)
 	}
 }
 
-void TrackBall::mouseClick(int button, int buttonState, Vector2D v2d, Vector3D v3d)
+void TrackBall::mouseClick(int button, int buttonState, Vector2D v2d, Vector3D v3d, bool updateCenter)
 {
 	if (button == Qt::LeftButton)
 	{
 		last_point_2D = v2d;
 		mapToSphere(last_point_2D, last_point_3D);
-		rotate_center = v3d;
+		if (updateCenter) rotate_center = v3d;
 	}
 	else if (button == Qt::RightButton)
 	{

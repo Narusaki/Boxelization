@@ -29,7 +29,7 @@ public:
 	void reAdjustTrackBall(double width, double height);
 
 	void mouseMove(int button, Vector2D v2d);
-	void mouseClick(int button, int buttonState, Vector2D v2d, Vector3D v3d);
+	void mouseClick(int button, int buttonState, Vector2D v2d, Vector3D v3d, bool updateCenter);
 	void assignRotateCenter(Vector3D rotate_center_);
 
 private:

@@ -53,4 +53,5 @@ void Boxelization::ResetAnimation()
 		for (int i = 0; i < 16; ++i)
 			node.mvMatrix[i] = i % 5 == 0 ? 1 : 0;
 	}
+	glWidget->update();
 }

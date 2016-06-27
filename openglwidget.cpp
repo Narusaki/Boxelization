@@ -119,7 +119,7 @@ void OpenGLWidget::mousePressEvent(QMouseEvent* event)
 
 	trackball->mouseClick(event->buttons(), 
 		1, 
-		Vector2D(event->x(), event->y()), picked_pos);
+		Vector2D(event->x(), event->y()), picked_pos, winZ < 0.99);
 	updateGL();
 }
 
