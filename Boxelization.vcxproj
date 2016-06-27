@@ -132,6 +132,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dirent.h" />
     <ClInclude Include="GeneratedFiles\ui_boxelization.h" />
     <ClInclude Include="GeneratedFiles\ui_optionwidget.h" />
     <ClInclude Include="SceneGraph.h" />
