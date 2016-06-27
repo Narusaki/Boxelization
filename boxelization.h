@@ -19,6 +19,10 @@ public slots:
 	void SetRotateSpeed(int periodTime);
 	void ResetAnimation();
 
+	void LoadCubes();
+	void LoadConnectivity();
+	void LoadPath();
+
 private:
 	Ui::BoxelizationClass ui;
 

@@ -27,6 +27,8 @@ class Ui_BoxelizationClass
 {
 public:
     QAction *actionImport;
+    QAction *actionLoad_Connectivity;
+    QAction *actionLoad_Path;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -40,6 +42,10 @@ public:
         BoxelizationClass->resize(1366, 768);
         actionImport = new QAction(BoxelizationClass);
         actionImport->setObjectName(QStringLiteral("actionImport"));
+        actionLoad_Connectivity = new QAction(BoxelizationClass);
+        actionLoad_Connectivity->setObjectName(QStringLiteral("actionLoad_Connectivity"));
+        actionLoad_Path = new QAction(BoxelizationClass);
+        actionLoad_Path->setObjectName(QStringLiteral("actionLoad_Path"));
         centralWidget = new QWidget(BoxelizationClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         BoxelizationClass->setCentralWidget(centralWidget);
@@ -58,6 +64,8 @@ public:
 
         menuBar->addAction(menuFile->menuAction());
         menuFile->addAction(actionImport);
+        menuFile->addAction(actionLoad_Connectivity);
+        menuFile->addAction(actionLoad_Path);
 
         retranslateUi(BoxelizationClass);
 
@@ -67,7 +75,9 @@ public:
     void retranslateUi(QMainWindow *BoxelizationClass)
     {
         BoxelizationClass->setWindowTitle(QApplication::translate("BoxelizationClass", "Boxelization", 0));
-        actionImport->setText(QApplication::translate("BoxelizationClass", "Import", 0));
+        actionImport->setText(QApplication::translate("BoxelizationClass", "Import Cubes", 0));
+        actionLoad_Connectivity->setText(QApplication::translate("BoxelizationClass", "Load Connectivity", 0));
+        actionLoad_Path->setText(QApplication::translate("BoxelizationClass", "Load Path", 0));
         menuFile->setTitle(QApplication::translate("BoxelizationClass", "File", 0));
     } // retranslateUi
 

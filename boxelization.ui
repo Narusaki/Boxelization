@@ -28,6 +28,8 @@
      <string>File</string>
     </property>
     <addaction name="actionImport"/>
+    <addaction name="actionLoad_Connectivity"/>
+    <addaction name="actionLoad_Path"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -42,7 +44,17 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionImport">
    <property name="text">
-    <string>Import</string>
+    <string>Import Cubes</string>
+   </property>
+  </action>
+  <action name="actionLoad_Connectivity">
+   <property name="text">
+    <string>Load Connectivity</string>
+   </property>
+  </action>
+  <action name="actionLoad_Path">
+   <property name="text">
+    <string>Load Path</string>
    </property>
   </action>
  </widget>

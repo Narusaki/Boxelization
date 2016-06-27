@@ -1,4 +1,5 @@
 #include "boxelization.h"
+#include <QtWidgets\QFileDialog>
 
 Boxelization::Boxelization(QWidget *parent)
 	: QMainWindow(parent)
@@ -19,7 +20,6 @@ Boxelization::Boxelization(QWidget *parent)
 	timer->setInterval(refreshTimeSlice);
 	connect(timer, SIGNAL(timeout()), glWidget, SLOT(timeUp()));
 
-
 	connect(optionWidgetUI->pushButton, SIGNAL(clicked()), this, SLOT(ResetAnimation()));
 	connect(optionWidgetUI->pushButton_2, SIGNAL(clicked()), timer, SLOT(start()));
 	connect(optionWidgetUI->pushButton_3, SIGNAL(clicked()), timer, SLOT(stop()));
@@ -27,6 +27,10 @@ Boxelization::Boxelization(QWidget *parent)
 	connect(optionWidgetUI->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(SetRotateSpeed(int)));
 	// initially, set the rotation of 90 degrees completed in 5 seconds;
 	SetRotateSpeed(optionWidgetUI->horizontalSlider->value());
+
+	connect(ui.actionImport, SIGNAL(triggered()), this, SLOT(LoadCubes()));
+	connect(ui.actionLoad_Connectivity, SIGNAL(triggered()), this, SLOT(LoadConnectivity()));
+	connect(ui.actionLoad_Path, SIGNAL(triggered()), this, SLOT(LoadPath()));
 }
 
 Boxelization::~Boxelization()
@@ -54,4 +58,22 @@ void Boxelization::ResetAnimation()
 			node.mvMatrix[i] = i % 5 == 0 ? 1 : 0;
 	}
 	glWidget->update();
+}
+
+void Boxelization::LoadCubes()
+{
+	QString dirName = QFileDialog::getExistingDirectory(this, "Choose Boxes Directory", "");
+	glWidget->sceneGraph->LoadModel(dirName.toStdString());
+}
+
+void Boxelization::LoadConnectivity()
+{
+	QString filename = QFileDialog::getOpenFileName(this, "Open Connectivity File", "", "Connectivity file(*.connect)");
+	glWidget->sceneGraph->LoadConnectivity(filename.toStdString());
+}
+
+void Boxelization::LoadPath()
+{
+	QString filename = QFileDialog::getOpenFileName(this, "Open Path File", "", "Path file(*.path)");
+	glWidget->sceneGraph->LoadPath(filename.toStdString());
 }

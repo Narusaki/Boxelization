@@ -7,9 +7,6 @@ OpenGLWidget::OpenGLWidget(QWidget *parent) : QGLWidget(parent)
 	trackball->init();
 
 	sceneGraph = new SimpleSceneGraph();
-	sceneGraph->LoadModel(".\\example");
-	sceneGraph->LoadConnectivity(".\\example\\testconnect.txt");
-	sceneGraph->LoadPath(".\\example\\testpath.txt");
 }
 
 OpenGLWidget::~OpenGLWidget()

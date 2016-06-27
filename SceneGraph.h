@@ -84,7 +84,7 @@ public:
 	std::vector< std::list< int > > sceneGraph;
 	std::vector< bool > isDFSVisited;
 	int dfsParentNodeId = -1;
-	int rootId;
+	int rootId = -1;
 	double mvMatrix[16];
 
 	double rotateSpeed = 0.0;

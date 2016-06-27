@@ -123,6 +123,7 @@ bool SimpleSceneGraph::LoadPath(std::string pathFile)
 
 void SimpleSceneGraph::Render()
 {
+	if (rootId == -1) return;
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glMultMatrixd(mvMatrix);
@@ -139,31 +140,34 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
-	// TESTING MODIFICATION OF LOCAL MVMATRIX
-	// TODO: if nodeId == rotateNodeId && parentNodeId == centerNodeId
-	// TODO: update current node's mvMatrix here
-	auto &pathInfo = pathInfos[curPathInfoIndex];
-	if (nodeId == pathInfo.rotateNodeId && dfsParentNodeId == pathInfo.centerNodeId)
+	if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size())
 	{
-		glPushMatrix();
-		glLoadIdentity();
-		glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y,pathInfo.rotateCenter.z);
-		glRotated(rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
-		glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
-		glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
-		glPopMatrix();
-	}
-	// TODO: otherwise, if nodeId == centerNodeId && parentNodeId == rotateNodeId
-	// TODO: "reverse" the rotating matrix and update current node's mvMatrix here
-	else if (nodeId == pathInfo.centerNodeId && dfsParentNodeId == pathInfo.rotateNodeId)
-	{
-		glPushMatrix();
-		glLoadIdentity();
-		glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y, pathInfo.rotateCenter.z);
-		glRotated(-rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
-		glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
-		glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
-		glPopMatrix();
+		// TESTING MODIFICATION OF LOCAL MVMATRIX
+		// TODO: if nodeId == rotateNodeId && parentNodeId == centerNodeId
+		// TODO: update current node's mvMatrix here
+		auto &pathInfo = pathInfos[curPathInfoIndex];
+		if (nodeId == pathInfo.rotateNodeId && dfsParentNodeId == pathInfo.centerNodeId)
+		{
+			glPushMatrix();
+			glLoadIdentity();
+			glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y, pathInfo.rotateCenter.z);
+			glRotated(rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
+			glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
+			glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
+			glPopMatrix();
+		}
+		// TODO: otherwise, if nodeId == centerNodeId && parentNodeId == rotateNodeId
+		// TODO: "reverse" the rotating matrix and update current node's mvMatrix here
+		else if (nodeId == pathInfo.centerNodeId && dfsParentNodeId == pathInfo.rotateNodeId)
+		{
+			glPushMatrix();
+			glLoadIdentity();
+			glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y, pathInfo.rotateCenter.z);
+			glRotated(-rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
+			glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
+			glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
+			glPopMatrix();
+		}
 	}
 
 	glMultMatrixd(nodes[nodeId].mvMatrix);
