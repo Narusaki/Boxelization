@@ -8,7 +8,8 @@ OpenGLWidget::OpenGLWidget(QWidget *parent) : QGLWidget(parent)
 
 	sceneGraph = new SimpleSceneGraph();
 	sceneGraph->LoadModel(".\\example");
-	sceneGraph->LoadPath("");
+	sceneGraph->LoadConnectivity(".\\example\\testconnect.txt");
+	sceneGraph->LoadPath(".\\example\\testpath.txt");
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -107,6 +108,7 @@ void OpenGLWidget::mousePressEvent(QMouseEvent* event)
 	Vector3D picked_pos_, picked_pos;
 	GLfloat winX = event->x(), winY = viewport[3] - event->y(), winZ;
 	glReadPixels(winX, winY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
+	/*if (winZ > 0.99) return;*/
 	gluUnProject(winX, winY, winZ, 
 		mv_matrix, proj_matrix, viewport, 
 		&picked_pos_.x, &picked_pos_.y, &picked_pos_.z);

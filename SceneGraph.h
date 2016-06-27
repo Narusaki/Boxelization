@@ -39,12 +39,21 @@ public:
 
 	struct PathInfo
 	{
-		int nodeId;
+		// TODO: this PathInfo struct should contain all necessary information 
+		// TODO: that confirm a definite rotation, including the following: 
+		// TODO: the center&orbiting cubes, the center, direction, angle
+		int rotateNodeId = -1, centerNodeId = -1;
+		Vector3D rotateCenter;
+		Vector3D rotateAxis;
+		double angle = 0.0;
+
+		friend std::istream& operator>>(std::istream &in, PathInfo &pathInfo);
 	};
 	SimpleSceneGraph();
 	~SimpleSceneGraph();
 
 	bool LoadModel(std::string modelsDirectory);
+	bool LoadConnectivity(std::string connectivityFile);
 	bool LoadPath(std::string pathFile);
 	void Render();
 	// set for the rotating angle in each refreshment
@@ -55,17 +64,26 @@ public:
 		// TODO: check if the rotate upper bound is met
 		// TODO: if it is, change centerNodeId and rotateNodeId according to pathInfo
 		// TODO: otherwise, simply update rotateAngle (just like following);
-		rotateAngle += rotateSpeed;
+		if (curPathInfoIndex >= pathInfos.size()) return;
+		if (rotateAngle < pathInfos[curPathInfoIndex].angle)
+			rotateAngle += rotateSpeed;
+		else if (rotateAngle > pathInfos[curPathInfoIndex].angle)
+			rotateAngle = pathInfos[curPathInfoIndex].angle;
+		else
+		{
+			rotateAngle = 0; ++curPathInfoIndex;
+		}
 	}
 
 
 private:
 	void RenderNode(int nodeId);
 
-private:
+public:
 	std::vector< SGNode > nodes;
 	std::vector< std::list< int > > sceneGraph;
 	std::vector< bool > isDFSVisited;
+	int dfsParentNodeId = -1;
 	int rootId;
 	double mvMatrix[16];
 
@@ -73,8 +91,7 @@ private:
 	double rotateAngle = 0.0;
 
 	// path information
-	std::vector< PathInfo > pathInfo;						// loaded path information
-	int centerNodeId = -1, rotateNodeId = -1;				// current center and orbiting node
-	int rotateAngleUpperBound = 90.0;						// the maximum rotating angle upper bound
+	std::vector< PathInfo > pathInfos;						// loaded path information
+	int curPathInfoIndex = -1;								// current dealt path node id
 };
 #endif

@@ -3,8 +3,19 @@
 #include "SceneGraph.h"
 #include "dirent.h"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
+
+istream& operator>>(istream &in, SimpleSceneGraph::PathInfo &pathInfo)
+{
+	in >> pathInfo.rotateNodeId >> pathInfo.centerNodeId;
+	in >> pathInfo.rotateCenter.x >> pathInfo.rotateCenter.y >> pathInfo.rotateCenter.z;
+	in >> pathInfo.rotateAxis.x >> pathInfo.rotateAxis.y >> pathInfo.rotateAxis.z;
+	in >> pathInfo.angle;
+	return in;
+}
 
 SimpleSceneGraph::SimpleSceneGraph()
 {
@@ -60,22 +71,53 @@ bool SimpleSceneGraph::LoadModel(std::string modelsDirectory)
 	return true;
 }
 
+bool SimpleSceneGraph::LoadConnectivity(std::string connectivityFile)
+{
+	// Build the adjacent list according to the path. Set root.
+
+	// currently a fully-linked graph is built.
+	sceneGraph.resize(nodes.size());
+// 	for (int i = 0; i < sceneGraph.size(); ++i)
+// 	{
+// 		for (int j = 0; j < nodes.size(); ++j)
+// 		{
+// 			if (j == i) continue;
+// 			sceneGraph[i].push_back(j);
+// 		}
+// 	}
+
+	// WARNING: a complete graph will has a serious problem when rendering (some rotating may be lost)
+	// this could be just a tree 
+	// use a tree based on the input path (by added extra edges to form a tree) will solve this problem
+	// request the input file to provide such a tree
+
+	ifstream input(connectivityFile);
+	string l;
+	while (getline(input, l))
+	{
+		int n0, n1;
+		stringstream sin;
+		sin << l; sin >> n0 >> n1;
+		sceneGraph[n0].push_back(n1); sceneGraph[n1].push_back(n0);
+	}
+	rootId = 0;
+	return true;
+}
+
 bool SimpleSceneGraph::LoadPath(std::string pathFile)
 {
 	// TODO: Load the path information. 
-	// Build the adjacent list according to the path. Set root.
-	
-	// currently a fully-linked graph is built.
-	sceneGraph.resize(nodes.size());
-	for (int i = 0; i < sceneGraph.size(); ++i)
+	ifstream input(pathFile);
+	string l;
+	PathInfo curPathInfo;
+	while (getline(input, l))
 	{
-		for (int j = 0; j < nodes.size(); ++j)
-		{
-			if (j == i) continue;
-			sceneGraph[i].push_back(j);
-		}
+		stringstream sin;
+		sin << l; sin >> curPathInfo;
+		pathInfos.push_back(curPathInfo);
 	}
-	rootId = 0;
+
+	curPathInfoIndex = 0;
 	return true;
 }
 
@@ -86,6 +128,7 @@ void SimpleSceneGraph::Render()
 	glMultMatrixd(mvMatrix);
 	// DFS to render the scene
 	isDFSVisited.assign(isDFSVisited.size(), false);
+	dfsParentNodeId = -1;
 	RenderNode(rootId);
 	glPopMatrix();
 }
@@ -99,13 +142,29 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 	// TESTING MODIFICATION OF LOCAL MVMATRIX
 	// TODO: if nodeId == rotateNodeId && parentNodeId == centerNodeId
 	// TODO: update current node's mvMatrix here
-	glPushMatrix();
-	glLoadIdentity();
-	glRotated(rotateAngle, 1.0, 0.0, 0.0);
-	glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
-	glPopMatrix();
+	auto &pathInfo = pathInfos[curPathInfoIndex];
+	if (nodeId == pathInfo.rotateNodeId && dfsParentNodeId == pathInfo.centerNodeId)
+	{
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y,pathInfo.rotateCenter.z);
+		glRotated(rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
+		glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
+		glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
+		glPopMatrix();
+	}
 	// TODO: otherwise, if nodeId == centerNodeId && parentNodeId == rotateNodeId
 	// TODO: "reverse" the rotating matrix and update current node's mvMatrix here
+	else if (nodeId == pathInfo.centerNodeId && dfsParentNodeId == pathInfo.rotateNodeId)
+	{
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y, pathInfo.rotateCenter.z);
+		glRotated(-rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
+		glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
+		glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
+		glPopMatrix();
+	}
 
 	glMultMatrixd(nodes[nodeId].mvMatrix);
 	nodes[nodeId].m.Render();
@@ -114,6 +173,7 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 		adjNodeIter != sceneGraph[nodeId].end(); ++adjNodeIter)
 	{
 		if (isDFSVisited[*adjNodeIter]) continue;
+		dfsParentNodeId = nodeId;
 		RenderNode(*adjNodeIter);
 	}
 	glPopMatrix();

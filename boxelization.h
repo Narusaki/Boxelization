@@ -17,6 +17,7 @@ public:
 
 public slots:
 	void SetRotateSpeed(int periodTime);
+	void ResetAnimation();
 
 private:
 	Ui::BoxelizationClass ui;
