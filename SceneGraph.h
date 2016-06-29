@@ -7,6 +7,7 @@ The scene graph is represented by a adjacent linked table
 #define SCENEGRAPH_H
 
 #include "SimpleModel.h"
+#include "MatrixStack.h"
 #include <vector>
 #include <list>
 
@@ -93,5 +94,7 @@ public:
 	// path information
 	std::vector< PathInfo > pathInfos;						// loaded path information
 	int curPathInfoIndex = -1;								// current dealt path node id
+
+	MatrixStack mStack;
 };
 #endif

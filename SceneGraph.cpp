@@ -124,21 +124,19 @@ bool SimpleSceneGraph::LoadPath(std::string pathFile)
 void SimpleSceneGraph::Render()
 {
 	if (rootId == -1) return;
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
+	mStack.PushMVMatrix();
 	glMultMatrixd(mvMatrix);
 	// DFS to render the scene
 	isDFSVisited.assign(isDFSVisited.size(), false);
 	dfsParentNodeId = -1;
 	RenderNode(rootId);
-	glPopMatrix();
+	mStack.PopMVMatrix();
 }
 
 void SimpleSceneGraph::RenderNode(int nodeId)
 {
 	isDFSVisited[nodeId] = true;
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
+	mStack.PushMVMatrix();
 
 	if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size())
 	{
@@ -148,25 +146,25 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 		auto &pathInfo = pathInfos[curPathInfoIndex];
 		if (nodeId == pathInfo.rotateNodeId && dfsParentNodeId == pathInfo.centerNodeId)
 		{
-			glPushMatrix();
+			mStack.PushMVMatrix();
 			glLoadIdentity();
 			glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y, pathInfo.rotateCenter.z);
 			glRotated(rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
 			glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
 			glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
-			glPopMatrix();
+			mStack.PopMVMatrix();
 		}
 		// TODO: otherwise, if nodeId == centerNodeId && parentNodeId == rotateNodeId
 		// TODO: "reverse" the rotating matrix and update current node's mvMatrix here
 		else if (nodeId == pathInfo.centerNodeId && dfsParentNodeId == pathInfo.rotateNodeId)
 		{
-			glPushMatrix();
+			mStack.PushMVMatrix();
 			glLoadIdentity();
 			glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y, pathInfo.rotateCenter.z);
 			glRotated(-rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
 			glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
 			glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
-			glPopMatrix();
+			mStack.PopMVMatrix();
 		}
 	}
 
@@ -188,5 +186,5 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 		dfsParentNodeId = nodeId;
 		RenderNode(*adjNodeIter);
 	}
-	glPopMatrix();
+	mStack.PopMVMatrix();
 }

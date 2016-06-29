@@ -102,6 +102,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MatrixStack.cpp" />
     <ClCompile Include="openglwidget.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="SimpleModel.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="dirent.h" />
     <ClInclude Include="GeneratedFiles\ui_boxelization.h" />
     <ClInclude Include="GeneratedFiles\ui_optionwidget.h" />
+    <ClInclude Include="MatrixStack.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="SimpleModel.h" />
     <ClInclude Include="trackball.h" />
