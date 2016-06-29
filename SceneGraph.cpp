@@ -171,6 +171,14 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 	}
 
 	glMultMatrixd(nodes[nodeId].mvMatrix);
+	if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size() && 
+		nodeId == pathInfos[curPathInfoIndex].rotateNodeId)
+		glColor3f(0.0, 1.0, 0.0);
+	else if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size() && 
+		nodeId == pathInfos[curPathInfoIndex].centerNodeId)
+		glColor3f(1.0, 0.0, 0.0);
+	else
+		glColor3f(0.7, 0.7, 0.7);
 	nodes[nodeId].m.Render();
 	// recursively render 
 	for (auto adjNodeIter = sceneGraph[nodeId].begin(); 
