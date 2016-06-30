@@ -11,6 +11,8 @@ The scene graph is represented by a adjacent linked table
 #include <vector>
 #include <list>
 
+//#define OUTPUT_EACH_FRAME
+
 // a node of scene graph
 class SGNode
 {
@@ -79,6 +81,7 @@ public:
 
 private:
 	void RenderNode(int nodeId);
+	void OutputModels(SimpleModel &m);
 
 public:
 	std::vector< SGNode > nodes;
@@ -96,5 +99,8 @@ public:
 	int curPathInfoIndex = -1;								// current dealt path node id
 
 	MatrixStack mStack;
+
+	int renderCnt = 0;
+	int faceBase = 1;
 };
 #endif

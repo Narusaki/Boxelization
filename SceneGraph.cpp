@@ -129,8 +129,10 @@ void SimpleSceneGraph::Render()
 	// DFS to render the scene
 	isDFSVisited.assign(isDFSVisited.size(), false);
 	dfsParentNodeId = -1;
+	faceBase = 1;
 	RenderNode(rootId);
 	mStack.PopMVMatrix();
+	++renderCnt;
 }
 
 void SimpleSceneGraph::RenderNode(int nodeId)
@@ -178,6 +180,9 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 	else
 		glColor3f(0.7, 0.7, 0.7);
 	nodes[nodeId].m.Render();
+#ifdef OUTPUT_EACH_FRAME
+	OutputModels(nodes[nodeId].m);
+#endif
 	// recursively render 
 	for (auto adjNodeIter = sceneGraph[nodeId].begin(); 
 		adjNodeIter != sceneGraph[nodeId].end(); ++adjNodeIter)
@@ -187,4 +192,22 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 		RenderNode(*adjNodeIter);
 	}
 	mStack.PopMVMatrix();
+}
+
+void SimpleSceneGraph::OutputModels(SimpleModel &m)
+{
+	ofstream output(to_string(renderCnt)+".obj", ios::app);
+	double mv[16];
+	glGetDoublev(GL_MODELVIEW_MATRIX, mv);
+	for (auto &v : m.verts)
+	{
+		Vector3D p;
+		for (int j = 0; j < 3; ++j)
+			p[j] = mv[j] * v[0] + mv[j+4]*v[1] + mv[j+8]*v[2] + mv[j+12];
+		output << "v " << p << endl;
+	}
+	for (int i = 0; i < m.faces.size(); i += 3)
+		output << "f " << m.faces[i] + faceBase << " " << m.faces[i+1] + faceBase << " " << m.faces[i+2] + faceBase << endl;
+	faceBase += m.verts.size();
+	output.close();
 }
