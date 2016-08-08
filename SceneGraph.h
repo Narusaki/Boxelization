@@ -11,7 +11,7 @@ The scene graph is represented by a adjacent linked table
 #include <vector>
 #include <list>
 
-//#define OUTPUT_EACH_FRAME
+#define OUTPUT_EACH_FRAME
 
 // a node of scene graph
 class SGNode
@@ -68,6 +68,16 @@ public:
 		// TODO: if it is, change centerNodeId and rotateNodeId according to pathInfo
 		// TODO: otherwise, simply update rotateAngle (just like following);
 		if (curPathInfoIndex >= pathInfos.size()) return;
+// 		if(verify == 1)
+// 			rotateAngle = pathInfos[curPathInfoIndex].angle;
+// 		else {
+// 			rotateAngle = 0;
+// 			++curPathInfoIndex;
+// 			verify = 1;
+// 		}
+// 		verify = -1;
+// 		return;
+
 		if (rotateAngle < pathInfos[curPathInfoIndex].angle)
 			rotateAngle += rotateSpeed;
 		else if (rotateAngle > pathInfos[curPathInfoIndex].angle)
@@ -93,7 +103,7 @@ public:
 
 	double rotateSpeed = 0.0;
 	double rotateAngle = 0.0;
-
+	bool is_output_frame = false;
 	// path information
 	std::vector< PathInfo > pathInfos;						// loaded path information
 	int curPathInfoIndex = -1;								// current dealt path node id
@@ -102,5 +112,6 @@ public:
 
 	int renderCnt = 0;
 	int faceBase = 1;
+	int verify = 1;
 };
 #endif

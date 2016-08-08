@@ -23,7 +23,7 @@ Boxelization::Boxelization(QWidget *parent)
 	connect(optionWidgetUI->pushButton, SIGNAL(clicked()), this, SLOT(ResetAnimation()));
 	connect(optionWidgetUI->pushButton_2, SIGNAL(clicked()), timer, SLOT(start()));
 	connect(optionWidgetUI->pushButton_3, SIGNAL(clicked()), timer, SLOT(stop()));
-
+	connect(optionWidgetUI->pushButton_4, SIGNAL(clicked()), this, SLOT(saveFrame()));
 	connect(optionWidgetUI->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(SetRotateSpeed(int)));
 	// initially, set the rotation of 90 degrees completed in 5 seconds;
 	SetRotateSpeed(optionWidgetUI->horizontalSlider->value());
@@ -44,7 +44,8 @@ Boxelization::~Boxelization()
 
 void Boxelization::SetRotateSpeed(int periodTime)
 {
-	glWidget->sceneGraph->SetRotateSpeed(90.0 / (double)periodTime / 1000.0 * refreshTimeSlice);
+	glWidget->sceneGraph->SetRotateSpeed(90.0 / (double)periodTime * 10.0 / 1000.0 * refreshTimeSlice);
+	//glWidget->sceneGraph->SetRotateSpeed(90.0 / (0.002 * (double)periodTime) / 1000.0 * refreshTimeSlice);
 }
 
 void Boxelization::ResetAnimation()
@@ -76,4 +77,8 @@ void Boxelization::LoadPath()
 {
 	QString filename = QFileDialog::getOpenFileName(this, "Open Path File", "", "Path file(*.path)");
 	glWidget->sceneGraph->LoadPath(filename.toStdString());
+}
+
+void Boxelization::saveFrame() {
+	glWidget->sceneGraph->is_output_frame = !glWidget->sceneGraph->is_output_frame;
 }

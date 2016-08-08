@@ -133,6 +133,8 @@ void SimpleSceneGraph::Render()
 	RenderNode(rootId);
 	mStack.PopMVMatrix();
 	++renderCnt;
+
+	if (is_output_frame) is_output_frame = false;
 }
 
 void SimpleSceneGraph::RenderNode(int nodeId)
@@ -154,6 +156,14 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 			glRotated(rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
 			glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
 			glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
+// 			for (int i = 0; i < 4; ++i)
+// 			{
+// 				for (int j = 0; j < 4; ++j) {
+// 					std::cout << nodes[nodeId].mvMatrix[4 * i + j] << " ";
+// 				}
+// 				std::cout << endl;
+// 			}
+// 			system("pause");
 			mStack.PopMVMatrix();
 		}
 		// TODO: otherwise, if nodeId == centerNodeId && parentNodeId == rotateNodeId
@@ -180,9 +190,9 @@ void SimpleSceneGraph::RenderNode(int nodeId)
 	else
 		glColor3f(0.7, 0.7, 0.7);
 	nodes[nodeId].m.Render();
-#ifdef OUTPUT_EACH_FRAME
-	OutputModels(nodes[nodeId].m);
-#endif
+
+	if(is_output_frame) OutputModels(nodes[nodeId].m);
+
 	// recursively render 
 	for (auto adjNodeIter = sceneGraph[nodeId].begin(); 
 		adjNodeIter != sceneGraph[nodeId].end(); ++adjNodeIter)
@@ -207,7 +217,8 @@ void SimpleSceneGraph::OutputModels(SimpleModel &m)
 		output << "v " << p << endl;
 	}
 	for (int i = 0; i < m.faces.size(); i += 3)
-		output << "f " << m.faces[i] + faceBase << " " << m.faces[i+1] + faceBase << " " << m.faces[i+2] + faceBase << endl;
+		output << "f " << m.faces[i] + faceBase << " " << m.faces[i + 1] + faceBase << " " << m.faces[i + 2] + faceBase << endl;
 	faceBase += m.verts.size();
+
 	output.close();
 }

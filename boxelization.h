@@ -22,7 +22,7 @@ public slots:
 	void LoadCubes();
 	void LoadConnectivity();
 	void LoadPath();
-
+	void saveFrame();
 private:
 	Ui::BoxelizationClass ui;
 
