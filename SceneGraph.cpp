@@ -137,72 +137,117 @@ void SimpleSceneGraph::Render()
 	if (is_output_frame) is_output_frame = false;
 }
 
-void SimpleSceneGraph::RenderNode(int nodeId)
-{
-	isDFSVisited[nodeId] = true;
-	mStack.PushMVMatrix();
-
-	if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size())
-	{
-		// TESTING MODIFICATION OF LOCAL MVMATRIX
-		// TODO: if nodeId == rotateNodeId && parentNodeId == centerNodeId
-		// TODO: update current node's mvMatrix here
-		auto &pathInfo = pathInfos[curPathInfoIndex];
-		if (nodeId == pathInfo.rotateNodeId && dfsParentNodeId == pathInfo.centerNodeId)
-		{
-			mStack.PushMVMatrix();
-			glLoadIdentity();
-			glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y, pathInfo.rotateCenter.z);
-			glRotated(rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
-			glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
-			glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
-// 			for (int i = 0; i < 4; ++i)
-// 			{
-// 				for (int j = 0; j < 4; ++j) {
-// 					std::cout << nodes[nodeId].mvMatrix[4 * i + j] << " ";
-// 				}
-// 				std::cout << endl;
-// 			}
-// 			system("pause");
-			mStack.PopMVMatrix();
+// Reconfigurable modular robots (pair type)
+void SimpleSceneGraph::RenderNode(int nodeId) {
+	double tmpMatrix[16] = { 0 };
+	if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size()) {
+		auto& pathInfo = pathInfos[curPathInfoIndex];
+		mStack.PushMVMatrix();
+		glLoadIdentity();
+		glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y, pathInfo.rotateCenter.z);
+		glRotated(rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
+		glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
+		if (pathInfo.centerNodeId % 2 == 1) {
+			glGetDoublev(GL_MODELVIEW_MATRIX, nodes[pathInfo.centerNodeId].mvMatrix);
+			nodes[pathInfo.centerNodeId].leftUpdate();
 		}
-		// TODO: otherwise, if nodeId == centerNodeId && parentNodeId == rotateNodeId
-		// TODO: "reverse" the rotating matrix and update current node's mvMatrix here
-		else if (nodeId == pathInfo.centerNodeId && dfsParentNodeId == pathInfo.rotateNodeId)
+		else
 		{
-			mStack.PushMVMatrix();
-			glLoadIdentity();
-			glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y, pathInfo.rotateCenter.z);
-			glRotated(-rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
-			glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
-			glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
-			mStack.PopMVMatrix();
+			glGetDoublev(GL_MODELVIEW_MATRIX, nodes[pathInfo.rotateNodeId].mvMatrix);
+			nodes[pathInfo.rotateNodeId].rightUpdate();
 		}
+		mStack.PopMVMatrix();
 	}
 
-	glMultMatrixd(nodes[nodeId].mvMatrix);
-	if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size() && 
-		nodeId == pathInfos[curPathInfoIndex].rotateNodeId)
-		glColor3f(0.0, 1.0, 0.0);
-	else if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size() && 
-		nodeId == pathInfos[curPathInfoIndex].centerNodeId)
-		glColor3f(1.0, 0.0, 0.0);
-	else
-		glColor3f(0.7, 0.7, 0.7);
-	nodes[nodeId].m.Render();
-
-	if(is_output_frame) OutputModels(nodes[nodeId].m);
-
-	// recursively render 
-	for (auto adjNodeIter = sceneGraph[nodeId].begin(); 
-		adjNodeIter != sceneGraph[nodeId].end(); ++adjNodeIter)
+	for (int i = 0; i < sceneGraph.size(); i++)
 	{
-		if (isDFSVisited[*adjNodeIter]) continue;
-		dfsParentNodeId = nodeId;
-		RenderNode(*adjNodeIter);
+		glMultMatrixd(nodes[i].mvMatrix);
+		if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size() &&
+			i == pathInfos[curPathInfoIndex].rotateNodeId)
+			glColor3f(0.0, 1.0, 0.0);
+		else if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size() &&
+			i == pathInfos[curPathInfoIndex].centerNodeId)
+			glColor3f(1.0, 0.0, 0.0);
+		else
+			glColor3f(0.7, 0.7, 0.7);
+		nodes[i].m.Render();
 	}
-	mStack.PopMVMatrix();
 }
+
+// 
+// void SimpleSceneGraph::RenderNode(int nodeId)
+// {
+// 	isDFSVisited[nodeId] = true;
+// 	mStack.PushMVMatrix();
+// 
+// 	if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size())
+// 	{
+// 		// TESTING MODIFICATION OF LOCAL MVMATRIX
+// 		// TODO: if nodeId == rotateNodeId && parentNodeId == centerNodeId
+// 		// TODO: update current node's mvMatrix here
+// 		auto &pathInfo = pathInfos[curPathInfoIndex];
+// 		double tmpMatrix[16];
+// 		if (nodeId == pathInfo.rotateNodeId && dfsParentNodeId == pathInfo.centerNodeId)
+// 		{
+// 			mStack.PushMVMatrix();
+// 			glLoadIdentity();
+// 			glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y, pathInfo.rotateCenter.z);
+// 			glRotated(rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
+// 			glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
+// 			glGetDoublev(GL_MODELVIEW_MATRIX, tmpMatrix);
+// 			if (nodeId % 2 == 1) {
+// 				MatrixMultiplication(nodes[nodeId - 1].mvMatrix, tmpMatrix, nodes[nodeId - 1].mvMatrix);
+// 			}
+// 			else {
+// 				MatrixMultiplication(tmpMatrix, nodes[nodeId].mvMatrix, nodes[nodeId].mvMatrix);
+// 			}
+// // 			for (int i = 0; i < 4; ++i)
+// // 			{
+// // 				for (int j = 0; j < 4; ++j) {
+// // 					std::cout << nodes[nodeId].mvMatrix[4 * i + j] << " ";
+// // 				}
+// // 				std::cout << endl;
+// // 			}
+// // 			system("pause");
+// 			mStack.PopMVMatrix();
+// 		}
+// 		// TODO: otherwise, if nodeId == centerNodeId && parentNodeId == rotateNodeId
+// 		// TODO: "reverse" the rotating matrix and update current node's mvMatrix here
+// 		else if (nodeId == pathInfo.centerNodeId && dfsParentNodeId == pathInfo.rotateNodeId)
+// 		{
+// 			mStack.PushMVMatrix();
+// 			glLoadIdentity();
+// 			glTranslated(pathInfo.rotateCenter.x, pathInfo.rotateCenter.y, pathInfo.rotateCenter.z);
+// 			glRotated(-rotateAngle, pathInfo.rotateAxis.x, pathInfo.rotateAxis.y, pathInfo.rotateAxis.z);
+// 			glTranslated(-pathInfo.rotateCenter.x, -pathInfo.rotateCenter.y, -pathInfo.rotateCenter.z);
+// 			glGetDoublev(GL_MODELVIEW_MATRIX, nodes[nodeId].mvMatrix);
+// 			mStack.PopMVMatrix();
+// 		}
+// 	}
+// 
+// 	glMultMatrixd(nodes[nodeId].mvMatrix);
+// 	if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size() && 
+// 		nodeId == pathInfos[curPathInfoIndex].rotateNodeId)
+// 		glColor3f(0.0, 1.0, 0.0);
+// 	else if (curPathInfoIndex != -1 && curPathInfoIndex < pathInfos.size() && 
+// 		nodeId == pathInfos[curPathInfoIndex].centerNodeId)
+// 		glColor3f(1.0, 0.0, 0.0);
+// 	else
+// 		glColor3f(0.7, 0.7, 0.7);
+// 	nodes[nodeId].m.Render();
+// 
+// 	if(is_output_frame) OutputModels(nodes[nodeId].m);
+// 
+// 	// recursively render 
+// 	for (auto adjNodeIter = sceneGraph[nodeId].begin(); 
+// 		adjNodeIter != sceneGraph[nodeId].end(); ++adjNodeIter)
+// 	{
+// 		if (isDFSVisited[*adjNodeIter]) continue;
+// 		dfsParentNodeId = nodeId;
+// 		RenderNode(*adjNodeIter);
+// 	}
+// 	mStack.PopMVMatrix();
+// }
 
 void SimpleSceneGraph::OutputModels(SimpleModel &m)
 {

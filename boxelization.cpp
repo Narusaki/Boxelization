@@ -45,7 +45,7 @@ Boxelization::~Boxelization()
 void Boxelization::SetRotateSpeed(int periodTime)
 {
 	glWidget->sceneGraph->SetRotateSpeed(90.0 / (double)periodTime * 10.0 / 1000.0 * refreshTimeSlice);
-	//glWidget->sceneGraph->SetRotateSpeed(90.0 / (0.002 * (double)periodTime) / 1000.0 * refreshTimeSlice);
+	//glWidget->sceneGraph->SetRotateSpeed(90.0 / (0.002 * (double)periodTime) / 3000.0 * refreshTimeSlice);
 }
 
 void Boxelization::ResetAnimation()
@@ -55,8 +55,11 @@ void Boxelization::ResetAnimation()
 	glWidget->sceneGraph->rotateAngle = 0.0;
 	for (auto &node : glWidget->sceneGraph->nodes)
 	{
-		for (int i = 0; i < 16; ++i)
+		for (int i = 0; i < 16; ++i) {
+			node.inMatrix[i] = i % 5 == 0 ? 1 : 0;
 			node.mvMatrix[i] = i % 5 == 0 ? 1 : 0;
+		}
+			
 	}
 	glWidget->update();
 }
